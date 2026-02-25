@@ -5,6 +5,7 @@ const GoogleSignInButton = () => {
   const handleGoogleSignIn = () => {
     // Redirect to your backend Google OAuth endpoint
     window.location.href = 'http://localhost:8000/auth/google';
+    console.log("Redirecting to Google Sign-In...");
   };
 
   return (
