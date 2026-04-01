@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [emails, setEmails] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -59,16 +61,16 @@ export default function Dashboard() {
   return (
     <div className="dashboard-container">
       <nav className="sidebar">
-        <div className="logo">
+        <div className="logo" onClick={() => navigate("/dashboard")}>
           <div className="logo-icon"></div>
           <h2>MailFlow AI</h2>
         </div>
         <ul className="nav-links">
-          <li className="active">
+          <li className="active" onClick={() => navigate("/dashboard")}>
             <span className="icon">📊</span>
             <span>Overview</span>
           </li>
-          <li>
+          <li onClick={() => navigate("/leads")}>
             <span className="icon">👥</span>
             <span>Leads</span>
           </li>
@@ -184,10 +186,12 @@ export default function Dashboard() {
                  <p style={{padding: '1rem'}}>No emails connected yet.</p>
               )}
               {!loading && !error && emails.map((email, i) => {
-                const fromHeader = getHeader(email.headers, 'From');
-                const subject = getHeader(email.headers, 'Subject') || "No Subject";
-                const sender = formatSender(fromHeader);
+                const sender = email.sender || "Unknown Sender";
+                const subject = email.subject || "No Subject";
                 const initials = getInitials(sender);
+                
+                // Create a snippet from the body (plain text)
+                const snippet = email.body ? (email.body.substring(0, 100) + (email.body.length > 100 ? "..." : "")) : "No content";
                 
                 // Distinct colors for avatar styling
                 const colors = ['#eab308', '#ef4444', '#3b82f6', '#10b981', '#8b5cf6'];
@@ -199,10 +203,12 @@ export default function Dashboard() {
                     <div className="email-content">
                       <div className="email-top">
                         <span className="email-sender">{sender}</span>
-                        <span className="email-time">Recently</span>
+                        <span className="email-time">
+                          {new Date(email.receivedAt).toLocaleDateString()}
+                        </span>
                       </div>
                       <span className="email-subject">{subject}</span>
-                      <p className="email-snippet" dangerouslySetInnerHTML={{ __html: email.snippet || "No preview available..." }}></p>
+                      <p className="email-snippet">{snippet}</p>
                     </div>
                   </div>
                 );
