@@ -3,6 +3,7 @@
 const express = require('express')
 const authRoutes = require('./routes/auth.routes');
 const emailRoutes = require('./routes/email.routes');
+const leadRoutes = require('./routes/lead.routes');
 
 const cors = require('cors');
 
@@ -18,5 +19,7 @@ app.use(express.json());
 
 app.use('/auth', authRoutes)
 app.use('/email', emailRoutes)
+app.use('/leads', leadRoutes)
+
 
 module.exports = app

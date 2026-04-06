@@ -6,6 +6,7 @@
     "start": "node src/server.js"
   },
   "dependencies": {
+    "@langchain/core": "^1.1.38",
     "@prisma/client": "^6.19.2",
     "axios": "^1.13.5",
     "body-parser": "^2.2.2",
@@ -16,6 +17,7 @@
     "gaxios": "^7.1.2",
     "glob": "^13.0.6",
     "googleapis": "^171.4.0",
+    "langchain": "^1.2.39",
     "minimatch": "^10.2.2",
     "node-cron": "^4.2.1",
     "prisma": "^6.19.2",

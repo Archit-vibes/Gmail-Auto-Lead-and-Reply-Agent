@@ -17,19 +17,39 @@ export default function Dashboard() {
       userId = urlUserId;
       localStorage.setItem('userId', urlUserId);
       window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
-    if (userId && userId !== 'null' && userId !== 'undefined') {
-      fetchEmails(userId);
+      // First time login - perform full sync
+      syncWithGmail(userId);
+    } else if (userId && userId !== 'null' && userId !== 'undefined') {
+      // Returning user - just load from DB
+      loadEmailsFromDB(userId);
     }
   }, []);
 
-  const fetchEmails = async (id) => {
+  // Full Sync (Gmail + LLM) - Triggered on login or manual refresh
+  const syncWithGmail = async (id) => {
+    console.log("Syncing with Gmail...");
     setLoading(true);
     setError(null);
     try {
       const response = await fetch(`http://localhost:8000/email/fetch-emails/${id}`);
-      if (!response.ok) throw new Error('Failed to fetch emails');
+      if (!response.ok) throw new Error('Failed to sync emails');
+      const data = await response.json();
+      setEmails(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fast Load (Database Only) - Triggered on page mount
+  const loadEmailsFromDB = async (id) => {
+    console.log("Loading emails from database...");
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`http://localhost:8000/email/get-emails/${id}`);
+      if (!response.ok) throw new Error('Failed to load emails from DB');
       const data = await response.json();
       setEmails(data);
     } catch (err) {
@@ -93,9 +113,8 @@ export default function Dashboard() {
             </div>
             <div className="status-card-content">
               <span className="status-card-title">Total Leads</span>
-              <span className="status-card-subtitle">28</span>
+              <span className="status-card-subtitle">Live Data</span>
             </div>
-            <span className="status-card-value">28</span>
           </div>
           
           <div className="status-card red-glow">
@@ -104,9 +123,8 @@ export default function Dashboard() {
             </div>
             <div className="status-card-content">
               <span className="status-card-title">High Priority</span>
-              <span className="status-card-subtitle">6</span>
+              <span className="status-card-subtitle">Check Leads</span>
             </div>
-            <span className="status-card-value">6</span>
           </div>
           
           <div className="status-card blue-glow">
@@ -115,9 +133,8 @@ export default function Dashboard() {
             </div>
             <div className="status-card-content">
               <span className="status-card-title">Pending Replies</span>
-              <span className="status-card-subtitle">3</span>
+              <span className="status-card-subtitle">Action Required</span>
             </div>
-            <span className="status-card-value">3</span>
           </div>
           
           <div className="status-card green-glow">
@@ -125,10 +142,9 @@ export default function Dashboard() {
               <span className="status-card-icon">📅</span>
             </div>
             <div className="status-card-content">
-              <span className="status-card-title">Scheduled...</span>
-              <span className="status-card-subtitle">Meetings</span>
+              <span className="status-card-title">Meetings</span>
+              <span className="status-card-subtitle">Scheduled</span>
             </div>
-            <span className="status-card-value">5</span>
           </div>
         </section>
 
@@ -136,32 +152,18 @@ export default function Dashboard() {
           <div className="recent-activity glass-panel">
             <div className="activity-header">
               <h2>Recent Activity</h2>
-              <button className="btn-text">↻</button>
+              <button className="btn-text" onClick={() => {
+                  const id = localStorage.getItem('userId');
+                  if (id) loadEmailsFromDB(id);
+              }}>↻</button>
             </div>
             <ul className="activity-list">
               <li className="activity-item">
                 <div className="activity-icon blue">🤖</div>
                 <div className="activity-details">
-                  <h4>AI Generated Draft</h4>
-                  <p>Replied to John Doe's inquiry about pricing.</p>
+                  <h4>AI System Active</h4>
+                  <p>Monitoring your inbox for new leads.</p>
                 </div>
-                <span className="activity-time">2m ago</span>
-              </li>
-              <li className="activity-item">
-                <div className="activity-icon purple">📥</div>
-                <div className="activity-details">
-                  <h4>New Lead Captured</h4>
-                  <p>Sarah Smith from Acme Corp responded.</p>
-                </div>
-                <span className="activity-time">3h ago</span>
-              </li>
-              <li className="activity-item">
-                <div className="activity-icon green">✨</div>
-                <div className="activity-details">
-                  <h4>Follow-up Sent</h4>
-                  <p>Automated check-in with Tech Startups list.</p>
-                </div>
-                <span className="activity-time">5h ago</span>
               </li>
             </ul>
           </div>
@@ -169,31 +171,32 @@ export default function Dashboard() {
           <div className="email-scroll glass-panel">
             <div className="activity-header">
               <h2>Current Emails</h2>
-              <button 
-                className="btn-text" 
-                onClick={() => {
-                  const id = localStorage.getItem('userId');
-                  if (id) fetchEmails(id);
-                }}
-              >
-                ↻
-              </button>
+              <div className="header-actions">
+                {loading && <span className="sync-status">Syncing...</span>}
+                <button 
+                    className={`btn-text ${loading ? 'spinning' : ''}`}
+                    title="Refresh from Gmail"
+                    onClick={() => {
+                    const id = localStorage.getItem('userId');
+                    if (id) syncWithGmail(id);
+                    }}
+                >
+                    ↻
+                </button>
+              </div>
             </div>
             <div className="email-list">
-              {loading && <p style={{padding: '1rem'}}>Loading your emails...</p>}
+              {loading && emails.length === 0 && <p style={{padding: '1rem'}}>Connecting to your inbox...</p>}
               {error && <p style={{padding: '1rem', color: '#ef4444'}}>Error: {error}</p>}
               {!loading && !error && emails.length === 0 && (
-                 <p style={{padding: '1rem'}}>No emails connected yet.</p>
+                 <p style={{padding: '1rem'}}>No emails connected yet. Click refresh to sync.</p>
               )}
-              {!loading && !error && emails.map((email, i) => {
+              {emails.map((email, i) => {
                 const sender = email.sender || "Unknown Sender";
                 const subject = email.subject || "No Subject";
                 const initials = getInitials(sender);
-                
-                // Create a snippet from the body (plain text)
                 const snippet = email.body ? (email.body.substring(0, 100) + (email.body.length > 100 ? "..." : "")) : "No content";
                 
-                // Distinct colors for avatar styling
                 const colors = ['#eab308', '#ef4444', '#3b82f6', '#10b981', '#8b5cf6'];
                 const avatarColor = colors[i % colors.length];
 

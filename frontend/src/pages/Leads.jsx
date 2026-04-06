@@ -1,92 +1,54 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Leads.css";
 
 const Leads = () => {
   const navigate = useNavigate();
+  const [leads, setLeads] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const leads = [
-    {
-      id: 1,
-      company: "Acme Corp",
-      priority: "High Priority",
-      contact: "David Miller",
-      email: "david@acmecorp.com",
-      role: "CEO",
-      intent: "Interested in Product Demo for 50-person Fintech Team",
-      lastMessage: "Hi, we're evaluating tools for our 50-person fintech team, and would love to book a demo this week...",
-      tags: ["Product Demo", "Fintech", "50+ Employees"],
-      score: 85,
-      time: "1 hour ago",
-      size: "Company size",
-      period: "This Week",
-      status: "view_details"
-    },
-    {
-      id: 2,
-      company: "InnovateTech",
-      priority: "High Priority",
-      contact: "Sarah Johnson",
-      email: "sarah@innovatetech.io",
-      role: "Sales Director",
-      intent: "Partnership Opportunity - Enterprise Pricing",
-      lastMessage: "We are looking for a long-term partnership and need pricing details for our enterprise plan...",
-      tags: ["Partnership", "Enterprise"],
-      score: 80,
-      time: "3 hours ago",
-      size: "200",
-      period: "This Month",
-      status: "view_details"
-    },
-    {
-      id: 3,
-      company: "NextGen Solutions",
-      priority: "High Priority",
-      contact: "Michael Chen",
-      email: "michael@nextgen.com", // Added dummy email
-      role: "Founder",
-      intent: "Can we schedule a call next week?",
-      lastMessage: "Saw your product online. We're interested in learning more. Can we set up a quick call?",
-      tags: ["Demo Call", "SaaS", "Follow-up"],
-      score: 78,
-      time: "3 hours ago",
-      size: "18",
-      period: "Next Week",
-      status: "schedule_meeting"
-    },
-    {
-      id: 4,
-      company: "CodeWave",
-      priority: "Medium",
-      contact: "Lisa Patel",
-      email: "lisa.p@codewave.dev",
-      role: "CTO",
-      intent: "Collaboration on Developer Tools",
-      lastMessage: "We're building developer tools and would love to explore potential collaboration...",
-      tags: ["Collaboration", "DevTools"],
-      score: 62,
-      time: "1 day ago",
-      size: "25",
-      period: "This Quarter",
-      status: "create_draft"
-    },
-    {
-      id: 5,
-      company: "Flux Industries",
-      priority: "Low",
-      contact: "John Doe", // Added dummy contact
-      email: "john@flux.com", // Added dummy email
-      role: "Manager",
-      intent: "Inquiry about Services",
-      lastMessage: "Just reaching out to ask about your service offerings for next year...",
-      tags: ["Inquiry"],
-      score: 45,
-      time: "2 days ago",
-      size: "100+",
-      period: "Next Year",
-      status: "view_details"
+  useEffect(() => {
+    fetchLeads();
+  }, []);
+
+  const fetchLeads = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/leads");
+      const data = await response.json();
+      setLeads(data);
+    } catch (error) {
+      console.error("Error fetching leads:", error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  // Dynamic Metrics calculation
+  const totalLeads = leads.length;
+  const highPriorityCount = leads.filter(l => l.priority === "High").length;
+  const pendingReplies = leads.filter(l => l.status === "Fetched" || l.status === "new").length;
+  const scheduledMeetings = leads.filter(l => l.event).length;
+
+  const getInitials = (name) => {
+    if (!name) return "?";
+    return name[0].toUpperCase();
+  };
+
+  const formatSender = (sender) => {
+    if (!sender) return "Unknown Sender";
+    const nameMatch = sender.match(/^"?(.*?)"?\s*<.*>$/);
+    return nameMatch ? nameMatch[1] : sender;
+  };
+
+  const formatEmail = (sender) => {
+    if (!sender) return "";
+    const emailMatch = sender.match(/<(.*?)>/);
+    return emailMatch ? emailMatch[1] : sender;
+  };
+
+  if (loading) {
+    return <div className="loading-container">Loading Leads...</div>;
+  }
 
   return (
     <div className="dashboard-container">
@@ -142,8 +104,8 @@ const Leads = () => {
             <div className="metric-info">
               <span className="metric-label">Total Leads</span>
               <div className="metric-value-row">
-                <span className="metric-value">28</span>
-                <span className="metric-change positive">+12 this week</span>
+                <span className="metric-value">{totalLeads}</span>
+                <span className="metric-change positive">Active in system</span>
               </div>
             </div>
           </div>
@@ -152,28 +114,28 @@ const Leads = () => {
             <div className="metric-info">
               <span className="metric-label">High Priority</span>
               <div className="metric-value-row">
-                <span className="metric-value">6</span>
-                <span className="metric-change p-text">21% of total</span>
+                <span className="metric-value">{highPriorityCount}</span>
+                <span className="metric-change p-text">Requires attention</span>
               </div>
             </div>
           </div>
           <div className="metric-card">
             <div className="metric-icon brown-bg">💬</div>
             <div className="metric-info">
-              <span className="metric-label">Pending Replies</span>
+              <span className="metric-label">Pending Action</span>
               <div className="metric-value-row">
-                <span className="metric-value">3</span>
-                <span className="metric-change">Awaiting action</span>
+                <span className="metric-value">{pendingReplies}</span>
+                <span className="metric-change">Awaiting reply</span>
               </div>
             </div>
           </div>
           <div className="metric-card">
             <div className="metric-icon green-bg">📅</div>
             <div className="metric-info">
-              <span className="metric-label">Scheduled Meetings</span>
+              <span className="metric-label">Meetings</span>
               <div className="metric-value-row">
-                <span className="metric-value">5</span>
-                <span className="metric-change">This week</span>
+                <span className="metric-value">{scheduledMeetings}</span>
+                <span className="metric-change">Upcoming</span>
               </div>
             </div>
           </div>
@@ -197,33 +159,36 @@ const Leads = () => {
             <div key={lead.id} className="lead-card">
               <div className="lead-main">
                 <div className="lead-avatar-container">
-                  <div className={`lead-avatar ${lead.company.toLowerCase().replace(" ", "-")}`}>
-                    {lead.company[0]}
+                  <div className={`lead-avatar ${lead.company?.toLowerCase().replace(" ", "-") || "default"}`}>
+                    {getInitials(lead.company)}
                   </div>
                 </div>
                 <div className="lead-details">
                   <div className="lead-header">
-                    <h3>{lead.company}</h3>
-                    <span className={`priority-tag ${lead.priority.toLowerCase().replace(" ", "-")}`}>
-                      {lead.priority === "High Priority" && <span className="icon">⚡</span>}
-                      {lead.priority}
+                    <h3>{lead.company || "Unknown Company"}</h3>
+                    <span className={`priority-tag ${lead.priority?.toLowerCase() || "low"}`}>
+                      {lead.priority === "High" && <span className="icon">⚡</span>}
+                      {lead.priority} Priority
                     </span>
                   </div>
                   <div className="contact-info">
-                    <span>👤 {lead.contact}</span>
+                    <span>👤 {formatSender(lead.email.sender)}</span>
                     <span className="dot">•</span>
-                    <span>{lead.email}</span>
+                    <span>{formatEmail(lead.email.sender)}</span>
                     <span className="dot">•</span>
-                    <span>{lead.role}</span>
+                    <span>{lead.industry || "General Industry"}</span>
                   </div>
                   <div className="intent-section">
                     <div className="intent-title">
                       <span className="icon">✉️</span>
                       <strong>{lead.intent}</strong>
                     </div>
-                    <p className="intent-preview">{lead.lastMessage}</p>
+                    <p className="intent-preview">
+                      {lead.email.body.length > 150 ? lead.email.body.substring(0, 150) + "..." : lead.email.body}
+                    </p>
                     <div className="tags">
-                      {lead.tags.map(tag => <span key={tag} className="tag">{tag}</span>)}
+                      {lead.industry && <span className="tag">{lead.industry}</span>}
+                      <span className="tag">{lead.status}</span>
                     </div>
                   </div>
                 </div>
@@ -241,52 +206,46 @@ const Leads = () => {
                   <div className="stat-rows">
                     <div className="stat-row">
                       <span className="icon">🕒</span>
-                      <span>{lead.time}</span>
+                      <span>{new Date(lead.createdAt).toLocaleDateString()}</span>
                     </div>
                     <div className="stat-row">
                       <span className="icon">🏢</span>
-                      <span>{lead.size}</span>
-                    </div>
-                    <div className="stat-row">
-                      <span className="icon">📅</span>
-                      <span>{lead.period}</span>
+                      <span>{lead.industry || "N/A"}</span>
                     </div>
                   </div>
                 </div>
                 <div className="lead-actions">
-                  <span className="score-label">Score</span>
+                  <span className="score-label">Interest Score</span>
                   <div className="score-mini-bar">
                      <div className="score-mini-fill" style={{ width: `${lead.score}%`, backgroundColor: lead.score > 70 ? '#f97316' : lead.score > 50 ? '#eab308' : '#3b82f6' }}></div>
                   </div>
                   <button className="btn-secondary">👁️ View Details</button>
-                  {lead.status === "schedule_meeting" ? (
-                    <button className="btn-action-green">📅 Schedule Meeting</button>
-                  ) : lead.status === "create_draft" ? (
-                    <button className="btn-secondary">+ Create Draft</button>
+                  {lead.event ? (
+                    <button className="btn-action-green">📅 Meeting Scheduled</button>
                   ) : (
-                    <button className="btn-secondary">✏️ Edit Draft</button>
+                    <button className="btn-secondary">✏️ Draft Reply</button>
                   )}
                 </div>
               </div>
             </div>
           ))}
+          {leads.length === 0 && (
+            <div className="no-leads">
+              <p>No leads found. Try fetching some emails!</p>
+            </div>
+          )}
         </section>
 
         <footer className="pagination-footer">
-          <div className="leads-count">Showing 1 - 5 of 28 leads</div>
+          <div className="leads-count">Showing {leads.length} leads</div>
           <div className="pagination-controls">
             <button className="page-btn">{"<"}</button>
             <button className="page-btn active">1</button>
-            <button className="page-btn">2</button>
-            <button className="page-btn">3</button>
-            <button className="page-btn">4</button>
-            <button className="page-btn">5</button>
-            <button className="page-btn">6</button>
             <button className="page-btn">{">"}</button>
           </div>
           <div className="rows-per-page">
             <span>Rows per page:</span>
-            <select><option>5</option></select>
+            <select><option>{leads.length || 10}</option></select>
           </div>
         </footer>
       </main>
