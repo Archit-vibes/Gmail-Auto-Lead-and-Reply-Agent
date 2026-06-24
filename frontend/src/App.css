@@ -1,40 +1,56 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+#root{
+  --app-max-width: 1200px;
+  --accent: #0066ff;
+  --bg: #f5f7fb;
+  --panel: #ffffff;
+  --muted: #6b7280;
+  --text: #0b1a2b;
+  --radius: 12px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #5ecceaaa);
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  background: linear-gradient(180deg, #eef3fb 0%, var(--bg) 100%);
+  color:var(--text);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#root{
+  max-width:var(--app-max-width);
+  margin:2.5rem auto;
+  padding:1.5rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.app-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:1rem;
+  margin-bottom:1.25rem;
 }
 
-.card {
-  padding: 2em;
+.brand{
+  display:flex;align-items:center;gap:.75rem
 }
+.brand .logo{width:40px;height:40px;border-radius:8px;background:var(--accent);box-shadow:0 6px 18px rgba(0,102,255,0.12)}
+.brand h1{font-size:1.1rem;font-weight:700}
+
+.card{
+  background:var(--panel);
+  border-radius:var(--radius);
+  padding:1rem;
+  box-shadow:0 6px 20px rgba(18,35,60,0.06);
+}
+
+.centered{max-width:920px;margin:0 auto}
+
+.muted{color:var(--muted)}
+
+/* small helpers */
+.btn{background:var(--accent);color:white;padding:.6rem .9rem;border-radius:10px;border:none;font-weight:600;cursor:pointer}
+
 
 
