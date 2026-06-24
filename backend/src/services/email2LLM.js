@@ -13,7 +13,7 @@ const parser = StructuredOutputParser.fromZodSchema(
         priority: z.enum(["High", "Medium", "Low"]).describe("Priority level based on urgency and potential."),
         status: z.string().default("Fetched").describe("The process status, default to 'Fetched'."),
         isEventPlanned: z.boolean().describe("Whether a meeting or event is mentioned in the email."),
-        eventTime: z.string().optional().describe("ISO format date/time of the event if planned."),
+        eventTime: z.string().nullable().optional().describe("ISO format date/time of the event if planned."),
         createdAt: z.string().describe("The date the email was sent or lead was created in ISO format.")
     })
 )
@@ -44,7 +44,7 @@ async function email2LLM(savedEmails) {
         try {
             const formattedPrompt = await prompt.format({
                 subject: email.subject,
-                body: email.body
+                body: email.body.length > 3000 ? email.body.substring(0, 3000) + '... [TRUNCATED]' : email.body
             })
 
             const response = await model.invoke(formattedPrompt)

@@ -115,13 +115,13 @@ async function fetchEmails(req, res) {
                             where: { leadId: lead.id },
                             update: {
                                 scheduledTime: new Date(leadData.eventTime),
-                                status: "scheduled"
+                                status: "pending_confirmation"
                             },
                             create: {
                                 leadId: lead.id,
                                 calendarEventId: `msg-${leadData.emailDBId}`, // Placeholder identifier
                                 scheduledTime: new Date(leadData.eventTime),
-                                status: "scheduled"
+                                status: "pending_confirmation"
                             }
                         });
                     }
