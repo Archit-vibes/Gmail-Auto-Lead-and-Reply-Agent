@@ -23,6 +23,25 @@ const Leads = () => {
     }
   };
 
+  const handleScheduleEvent = async (lead) => {
+    const eventTime = new Date(lead.event.scheduledTime).toLocaleString();
+    if (window.confirm(`Do you want to schedule an event on ${eventTime} for this lead?`)) {
+      try {
+        const response = await fetch(`http://localhost:8000/leads/${lead.id}/schedule-event`, {
+          method: "POST"
+        });
+        if (response.ok) {
+          fetchLeads(); // Refresh leads to update the UI
+        } else {
+          alert("Failed to schedule event. Please check the console for details.");
+        }
+      } catch (error) {
+        console.error("Error scheduling event:", error);
+        alert("An error occurred while scheduling the event.");
+      }
+    }
+  };
+
   // Dynamic Metrics calculation
   const totalLeads = leads.length;
   const highPriorityCount = leads.filter(l => l.priority === "High").length;
@@ -221,7 +240,11 @@ const Leads = () => {
                   </div>
                   <button className="btn-secondary">👁️ View Details</button>
                   {lead.event ? (
-                    <button className="btn-action-green">📅 Meeting Scheduled</button>
+                    lead.event.status === "pending_confirmation" ? (
+                      <button className="btn-action-green" style={{backgroundColor: '#eab308'}} onClick={() => handleScheduleEvent(lead)}>📅 Create Event?</button>
+                    ) : (
+                      <button className="btn-action-green">📅 Meeting Scheduled</button>
+                    )
                   ) : (
                     <button className="btn-secondary">✏️ Draft Reply</button>
                   )}
