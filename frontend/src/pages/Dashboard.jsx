@@ -5,7 +5,7 @@ import "./Dashboard.css";
 export default function Dashboard() {
   const navigate = useNavigate();
   const [emails, setEmails] = useState([]);
-  const [loading, setLoadng] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function Dashboard() {
 
   const getInitials = (sender) => {
     if (!sender) return "?";
-    const parts = sender.splti(' ');
+    const parts = sender.split(' ');
     if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
     return parts[0].substring(0, 2).toUpperCase();
   };
