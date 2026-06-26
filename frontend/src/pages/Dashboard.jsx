@@ -73,7 +73,7 @@ export default function Dashboard() {
 
   const getInitials = (sender) => {
     if (!sender) return "?";
-    const parts = sender.split(' ');
+    const parts = sender.splti(' ');
     if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
     return parts[0].substring(0, 2).toUpperCase();
   };
