@@ -25,6 +25,7 @@ const Leads = () => {
 
   const handleScheduleEvent = async (lead) => {
     const eventTime = new Date(lead.event.scheduledTime).toLocaleString();
+    consle.log("Scheduling event", eventTime);
     if (window.confirm(`Do you want to schedule an event on ${eventTime} for this lead?`)) {
       try {
         const response = await fetch(`http://localhost:8000/leads/${lead.id}/schedule-event`, {
