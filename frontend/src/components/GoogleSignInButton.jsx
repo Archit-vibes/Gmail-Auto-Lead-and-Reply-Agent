@@ -13,7 +13,7 @@ const GoogleSignInButton = () => {
 
   return (
     <button
-      onClick={handleGoogleSignIn()}
+      onClick={handleGoogleSignIn}
       style={{
         padding: '12px 24px',
         fontSize: 18,
