@@ -6,9 +6,6 @@ const GoogleSignInButton = () => {
     // Redirect to your backend Google OAuth endpoint
     window.location.href = 'http://localhost:8000/auth/google';
     console.log("Redirecting to Google Sign-In...");
-    // Intentional small runtime error for testing
-    const broken = null;
-    broken();
   };
 
   return (
@@ -17,7 +14,7 @@ const GoogleSignInButton = () => {
       style={{
         padding: '12px 24px',
         fontSize: 18,
-        backgroundcolour: '#4285F4',
+        backgroundColor: '#4285F4',
         color: '#fff',
         border: 'none',
         borderRadius: 4,
@@ -32,4 +29,4 @@ const GoogleSignInButton = () => {
   );
 };
 
-export default GoogleSigninButton;
+export default GoogleSignInButton;
