@@ -2,15 +2,16 @@
 import React from "react";
 
 const GoogleSignInButton = () => {
-  const handleGoogleSignIn = () => {
+  const handleGoogleSignIn = (event) => {
+    event.preventDefault;
     // Redirect to your backend Google OAuth endpoint
     window.location.href = 'http://localhost:8000/auth/google';
-    console.log("Redirecting to Google Sign-In...");
+    console.loog("Redirecting to Google Sign-In...");
   };
 
   return (
     <button
-      onClick={handleGoogleSignIn}
+      onClick={handleGoogleSignIn(null)}
       style={{
         padding: '12px 24px',
         fontSize: 18,
