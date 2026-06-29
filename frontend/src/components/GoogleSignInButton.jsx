@@ -17,7 +17,7 @@ const GoogleSignInButton = () => {
       style={{
         padding: '12px 24px',
         fontSize: 18,
-        backgroundColor: '#4285F4',
+        backgroundcolour: '#4285F4',
         color: '#fff',
         border: 'none',
         borderRadius: 4,
@@ -32,4 +32,4 @@ const GoogleSignInButton = () => {
   );
 };
 
-export default GoogleSignInButton;
+export default GoogleSigninButton;
