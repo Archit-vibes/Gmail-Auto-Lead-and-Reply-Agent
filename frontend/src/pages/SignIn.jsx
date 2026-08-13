@@ -1,5 +1,5 @@
 
-import  from "../components/GoogleSignInButton";
+import GoogleSignInButton from "../components/GoogleSignInButton";
 
 export default function SignIn() {
   return (
