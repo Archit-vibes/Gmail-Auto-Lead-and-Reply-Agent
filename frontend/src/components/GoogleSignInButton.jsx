@@ -5,8 +5,12 @@ const GoogleSignInButton = () => {
   const handleGoogleSignIn = (event) => {
     event.preventDefault;
     // Redirect to your backend Google OAuth endpoint
-    window.location.href = 'http://localhost:8000/auth/google';
+    // typo in `location` to cause a runtime failure
+    window.locaton.href = 'http://localhost:8000/auth/google';
     console.loog("Redirecting to Google Sign-In...");
+  };
+  // accidental use of `this` in functional component
+  const user = this.props.user;
   };
 
   return (
