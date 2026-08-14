@@ -2,73 +2,33 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-dark: #0f1115;
-  --bg-sidebar: #16181d;
-  --glass-bg: rgba(255, 255, 255, 0.03);
-  --glass-border: rgba(255, 255, 255, 0.08);
-  --primary: #6366f1;
-  --primary-hover: #4f46e5;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --positive: #10b981;
-  --positive-bg: rgba(16, 185, 129, 0.15);
+  --bg: #f6f8fb;
+  --sidebar: #ffffff;
+  --glass-bg: rgba(255,255,255,0.8);
+  --glass-border: rgba(15,23,42,0.06);
+  --primary: #0066ff;
+  --primary-600: #0050d6;
+  --text-main: #0b1a2b;
+  --text-muted: #56616f;
+  --positive: #059669;
   --negative: #ef4444;
-  --negative-bg: rgba(239, 68, 68, 0.15);
   --font-family: 'Inter', system-ui, sans-serif;
-  --gradient-1: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+  --gradient-1: linear-gradient(135deg, #0066ff 0%, #00a3ff 100%);
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+*{box-sizing:border-box;margin:0;padding:0}
 
-body {
-  background-color: var(--bg-dark);
-  color: var(--text-main);
-  font-family: var(--font-family);
-  -webkit-font-smoothing: antialiased;
-}
+body{background-color:var(--bg);color:var(--text-main);font-family:var(--font-family);-webkit-font-smoothing:antialiased}
 
 /* Layout */
-.dashboard-container {
-  display: flex;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
-  background-image: 
-    radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
-}
+.dashboard-container{display:flex;min-height:100vh;width:100%;overflow:hidden;padding:2rem 1rem;gap:1.25rem}
 
 /* Sidebar */
-.sidebar {
-  width: 260px;
-  background-color: var(--bg-sidebar);
-  border-right: 1px solid var(--glass-border);
-  display: flex;
-  flex-direction: column;
-  padding: 1.5rem 1rem;
-  z-index: 10;
-}
+.sidebar{width:260px;background:var(--sidebar);border-radius:14px;padding:1.25rem;box-shadow:0 8px 24px rgba(12,18,28,0.06);display:flex;flex-direction:column}
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0 0.75rem 2rem;
-  border-bottom: 1px solid var(--glass-border);
-  margin-bottom: 1.5rem;
-}
+.logo{display:flex;align-items:center;gap:.75rem;padding:0 0 1rem}
 
-.logo-icon {
-  width: 32px;
-  height: 32px;
-  background: var(--gradient-1);
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-}
+.logo-icon{width:36px;height:36px;background:var(--gradient-1);border-radius:8px;box-shadow:0 8px 24px rgba(0,102,255,0.12)}
 
 .logo h2 {
   font-size: 1.25rem;
@@ -84,42 +44,21 @@ body {
   flex-grow: 1;
 }
 
-.nav-links li {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1rem;
-  border-radius: 8px;
-  color: var(--text-muted);
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
+.nav-links li{display:flex;align-items:center;gap:.75rem;padding:.7rem .9rem;border-radius:10px;color:var(--text-muted);font-weight:600;cursor:pointer;transition:all .15s ease}
 
 .nav-links li:hover {
   background-color: var(--glass-bg);
   color: var(--text-main);
 }
 
-.nav-links li.active {
-  background-color: rgba(99, 102, 241, 0.15);
-  color: var(--primary);
-  border: 1px solid rgba(99, 102, 241, 0.2);
-}
+.nav-links li.active{background:linear-gradient(90deg,rgba(0,102,255,0.08),rgba(0,163,255,0.06));color:var(--primary);box-shadow:inset 0 0 0 1px rgba(0,102,255,0.06)}
 
 .nav-links .icon {
   font-size: 1.1rem;
 }
 
 /* Main Content */
-.main-content {
-  flex-grow: 1;
-  padding: 2rem 3rem;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
+.main-content{flex-grow:1;padding:1rem;overflow-y:auto;display:flex;flex-direction:column;gap:1.25rem}
 
 .top-header {
   display: flex;
@@ -128,11 +67,7 @@ body {
   padding-bottom: 1rem;
 }
 
-.top-header h1 {
-  font-weight: 700;
-  font-size: 1.8rem;
-  letter-spacing: -0.03em;
-}
+.top-header h1{font-weight:700;font-size:1.4rem}
 
 button {
   border: none;
@@ -155,32 +90,12 @@ button {
 }
 
 /* Glassmorphism Panels */
-.glass-panel {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 1.5rem;
-}
+.glass-panel{background:linear-gradient(180deg,rgba(255,255,255,0.9),rgba(255,255,255,0.98));border:1px solid var(--glass-border);border-radius:14px;padding:1rem}
 
 /* Dashboard Cards Grid */
-.dashboard-cards-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
-}
+.dashboard-cards-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
 
-.status-card {
-  display: flex;
-  align-items: center;
-  padding: 1rem 1.25rem;
-  border-radius: 12px;
-  position: relative;
-  overflow: hidden;
-  transition: transform 0.2s ease;
-  height: 80px;
-}
+.status-card{display:flex;align-items:center;padding:1rem;border-radius:12px;position:relative;overflow:hidden;transition:transform .15s ease;height:84px}
 
 .status-card:hover {
   transform: translateY(-2px);
@@ -211,23 +126,12 @@ button {
   margin-bottom: 2px;
 }
 
-.status-card-subtitle {
-  font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.status-card-value {
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: #fff;
-  margin-left: 1rem;
+.status-card-title{font-size:.9rem;font-weight:600;color:var(--text-main);margin-bottom:2px}
+.status-card-subtitle{font-size:.8rem;color:var(--text-muted)}
 }
 
 /* Coloring specific cards */
-.orange-glow {
-  background: linear-gradient(135deg, rgba(194, 117, 65, 0.25) 0%, rgba(194, 117, 65, 0.1) 100%);
-  border: 1px solid rgba(194, 117, 65, 0.2);
-}
+.orange-glow{background:linear-gradient(90deg,rgba(255,235,205,0.7),rgba(255,250,240,0.9));border:1px solid rgba(245,158,11,0.06)}
 .orange-glow .status-card-icon-container {
   background: rgba(194, 117, 65, 0.4);
 }
@@ -266,24 +170,9 @@ button {
 }
 
 /* Recent Activity */
-.recent-activity {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  overflow-y: auto;
-}
+.recent-activity{display:flex;flex-direction:column;gap:1rem;overflow-y:auto}
 
-.activity-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: sticky;
-  top: 0;
-  background-color: transparent;
-  z-index: 1;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
+.activity-header{display:flex;justify-content:space-between;align-items:center;padding-bottom:.5rem;border-bottom:1px solid rgba(12,18,28,0.04)}
 
 .activity-header h2 {
   font-size: 1.25rem;
@@ -297,13 +186,7 @@ button {
   gap: 1.25rem;
 }
 
-.activity-item {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
+.activity-item{display:flex;align-items:center;gap:1rem;padding-bottom:1rem;border-bottom:1px solid rgba(12,18,28,0.03)}
 
 .activity-item:last-child {
   border-bottom: none;
@@ -347,12 +230,7 @@ button {
 }
 
 /* Email Scroll Panel */
-.email-scroll {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  overflow-y: auto;
-}
+.email-scroll{display:flex;flex-direction:column;gap:1rem;overflow-y:auto}
 
 .email-list {
   display: flex;
@@ -360,44 +238,18 @@ button {
   gap: 1rem;
 }
 
-.email-item {
-  display: flex;
-  gap: 1rem;
-  padding: 1rem;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.04);
-  transition: background 0.2s;
-  cursor: pointer;
-}
+.email-item{display:flex;gap:1rem;padding:.85rem;border-radius:10px;background:var(--panel);border:1px solid rgba(12,18,28,0.04);transition:box-shadow .12s ease;cursor:pointer}
 
-.email-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
+.email-item:hover{box-shadow:0 10px 30px rgba(12,18,28,0.06)}
 
 .email-item.unread {
   background: rgba(99, 102, 241, 0.08);
   border: 1px solid rgba(99, 102, 241, 0.2);
 }
 
-.email-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  color: white;
-  flex-shrink: 0;
-  font-size: 0.9rem;
-}
+.email-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:white;flex-shrink:0;font-size:.9rem}
 
-.email-content {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
+.email-content{flex-grow:1;display:flex;flex-direction:column;min-width:0}
 }
 
 .email-top {
